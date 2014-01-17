@@ -1,0 +1,12 @@
+{% extends "admin_base.html" %}
+{% load static %}
+
+{% block javascripts %}
+  {{ block.super }}
+  <script src="{% static 'scaffold_report/scaffold_report.js' %}"></script>  
+{% endblock %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <link rel="stylesheet" href="/static/scaffold_report/scaffold_report.css"/> 
+{% endblock %}
