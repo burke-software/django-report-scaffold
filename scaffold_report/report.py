@@ -20,12 +20,7 @@ class ScaffoldReport(object):
     num_preview = 3
     filters = []
 
-    def register(self):
-        scaffold_reports[self.name] = self.__class__
-
     def __init__(self):
-        if not self.name in scaffold_reports:
-            self.register()
         self._possible_filters = [] # developer selected filters from subclass
         self._active_filters = [] # end user selected filters from view
         self.report_context = {}
@@ -123,19 +118,54 @@ class ScaffoldReport(object):
             return [self.model._meta.verbose_name_plural.title()]
 
 
-scaffold_reports = {}
-for app in settings.INSTALLED_APPS:
-    # try to import the app
-    try:
-        app_path = import_module(app).__path__
-    except AttributeError:
-        continue
+try:
+    from collections import OrderedDict
+except:
+    OrderedDict = dict # pyflakes:ignore
 
-    # try to find a app.scaffold_reports module
-    try:
-        imp.find_module('scaffold_reports', app_path)
-    except ImportError:
-        continue
+def autodiscover():
+    """
+    Auto-discover INSTALLED_APPS report.py modules and fail silently when
+    not present. Borrowed form django.contrib.admin
+    """
+    from django.utils.importlib import import_module
+    from django.utils.module_loading import module_has_submodule
 
-    # looks like we found it so import it !
-    import_module('%s.scaffold_reports' % app)
+    global scaffold_reports
+
+    for app in settings.INSTALLED_APPS:
+        mod = import_module(app)
+        try:
+            before_import_registry = copy.copy(scaffold_reports)
+            import_module('%s.scaffold_reports' % app)
+        except:
+            scaffold_eports = before_import_registry
+            if module_has_submodule(mod, 'scaffold_reports'):
+                raise
+
+class ScaffoldReportClassManager(object):
+    """
+    Class to handle registered reports class. 
+    Borrowed from django-model-report Thanks!
+    """
+    _register = OrderedDict()
+
+    def __init__(self):
+        self._register = OrderedDict()
+
+    def register(self, slug, rclass):
+        if slug in self._register:
+            raise ValueError('Slug already exists: %s' % slug)
+        setattr(rclass, 'slug', slug)
+        self._register[slug] = rclass
+
+    def get_report(self, slug):
+        # return class
+        return self._register.get(slug, None)
+
+    def get_reports(self):
+        # return clasess
+        return self._register.values()
+
+
+scaffold_reports = ScaffoldReportClassManager()

@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.edit import ProcessFormView
 from django.utils import simplejson
 from report_utils.utils import DataExportMixin
-from .report import *
+from .report import scaffold_reports
 import tempfile
 import time
 import os
@@ -15,7 +15,7 @@ import os
 class ScaffoldReportMixin(object):
     def dispatch(self, request, *args, **kwargs):
         try:
-            self.report = scaffold_reports[kwargs['name']]()
+            self.report = scaffold_reports.get_report(kwargs['name'])()
         except KeyError:
             raise Http404
         self.model = self.report.model
