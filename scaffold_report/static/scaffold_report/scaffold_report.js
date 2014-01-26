@@ -60,7 +60,7 @@ function getCookie(name) {
 
 function view_results(type) {
   var csrf_token = getCookie('csrftoken');
-  var filters = $('.active_filters .report_filter');
+  var filters = $('#scaffold_active_filters .filter');
   var filter_data = []
   $('#preview_area').fadeOut();
   $(filters).each(function(key, value) { 
@@ -90,34 +90,28 @@ function view_results(type) {
 }
 
 var filter_i = 0;
-function add_filter(event, ui) {
-    prepare_filter(ui.item);
+function add_filter(select) {
+    prepare_filter(select);
     view_results('preview');
 }
 
-function prepare_filter(filter) {
-    var form = $(filter).children('form.filter_form')
-    form.show();
-    $(filter).attr('id', 'filter_' + filter_i);
-    form.children('input[name="filter_number"]').val(filter_i);
+function prepare_filter(select) {
+    var value = select.options[select.selectedIndex].value;
+    var form = $('#filter_copy_area .' + value).clone();
+    $(form).attr('id', 'filter_' + filter_i);
+    $('#scaffold_active_filters').append(form);
+    $('#add_new_filter').val('');
+    form.children('form').children('input[name="filter_number"]').val(filter_i);
     filter_i = filter_i + 1;
 }
 
 $(function() {
-  $( "#sortable_filters" ).sortable({
-    placeholder: "ui-state-highlight",
-    update: add_filter,
-  });
-
-  $(".draggable").draggable({
-    connectToSortable: '#sortable_filters',
-    helper: 'clone',
-    revert: "invalid",
-  });
-  $(".select_filters li.draggable").dblclick(function(ev){
-    var new_filter = $(this).clone(add_filter).appendTo('#sortable_filters');
-    prepare_filter(new_filter);
-  });
+  $('#scaffold_active_filters .filter').each(function(index, value) { 
+    $(value).attr('id', 'filter_' + filter_i);
+    $(value).children('form').children('input[name="filter_number"]').val(filter_i);
+    filter_i = filter_i + 1;
+  } );
+  $('#add_new_filter').val('');
   view_results('preview');
 });
 

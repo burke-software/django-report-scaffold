@@ -1,0 +1,11 @@
+<div class="filter {{ filter.get_name }}" data-name="{{ filter.get_name }}">
+  {{ filter.get_verbose_name }}
+  <form method="post" class="filter_form">
+    {% if filter.template_name %}
+      {{ filter.render_form }}
+    {% else %}
+      {{ filter.form }}
+      {{ filter.post_form_text }}
+    {% endif %}
+  </form>
+</div>

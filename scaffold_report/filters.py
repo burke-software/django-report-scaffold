@@ -17,6 +17,9 @@ class Filter(object):
     form = None
     raw_form_data = None
     add_fields = []
+    default = False
+    can_remove = True
+    can_add = True
     
     def __init__(self, **kwargs):
         for key, value in six.iteritems(kwargs):

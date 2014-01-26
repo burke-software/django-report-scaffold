@@ -1,9 +1,4 @@
 from django.conf import settings
-from django.utils.importlib import import_module
-from django import forms
-from django.views.generic import FormView
-import imp
-import inspect
 import copy
 
 class ScaffoldReport(object):
@@ -26,7 +21,12 @@ class ScaffoldReport(object):
         self.report_context = {}
         self.filter_errors = []
         self.add_fields = []
+        field_names = []
         for possible_filter in self.filters:
+            if possible_filter.get_name() in field_names:
+                raise Exception(
+                    'Duplicate field names in scaffold report. Please set a different name for {}.'.format(possible_filter.get_name()))
+            field_names += [possible_filter.get_name()]
             self._possible_filters += [possible_filter]
 
     @property
@@ -60,7 +60,16 @@ class ScaffoldReport(object):
             else:
                 report_context = active_filter.get_report_context(report_context)
                 self.add_fields += active_filter.add_fields
+        self.report_context = dict(self.report_context.items() + report_context.items())
         return queryset
+
+    def get_appy_context(self):
+        """ Return a context dict for use in an appy template
+        Acts a like context in Django template rendering.
+        """
+        appy_context = {}
+        appy_context['objects'] = self.get_queryset()
+        return appy_context
 
     def report_to_list(self, user, preview=False):
         """ Convert to python list """
