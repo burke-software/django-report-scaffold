@@ -1,6 +1,7 @@
 <div class="filter {{ filter.get_name }}" data-name="{{ filter.get_name }}">
-  {{ filter.get_verbose_name }}
+  <h3 class="filter-title">{{ filter.get_verbose_name }}</h3>
   <form method="post" class="filter_form">
+	<a href="javascript:void(0);" class="delete-filter"><i class="icon-cancel-circled"></i></a>
     {% if filter.template_name %}
       {{ filter.render_form }}
     {% else %}

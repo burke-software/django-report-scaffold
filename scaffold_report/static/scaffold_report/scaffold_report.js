@@ -68,7 +68,7 @@ function view_results(type) {
       'name': $(value).data('name'),
       'form': $(value).children('form.filter_form').serialize()
     }
-    filter_data.push(filter_dict)
+    filter_data.push(filter_dict);
   })
   data_dict = {
     csrfmiddlewaretoken: csrf_token,
@@ -96,14 +96,28 @@ function add_filter(select) {
 }
 
 function prepare_filter(select) {
-    var value = select.options[select.selectedIndex].value;
-    var form = $('#filter_copy_area .' + value).clone();
+    var value = select.options[select.selectedIndex].value; // Outputs something like "TardyFilter"
+    var form = $('#filter_copy_area .' + value).clone(true); // Set clone to true to duplicate event handler data as well (i.e. .click() action for delete-filter)
     $(form).attr('id', 'filter_' + filter_i);
+
     $('#scaffold_active_filters').append(form);
     $('#add_new_filter').val('');
+    form.children('form').children('input[type="text"],input[type="number"]').addClass('input'); // Gumby styling. Adds the appropriate class to text and number inputs.
+    form.children('form').children('select').not('[multiple="multiple"]').wrap('<div class="picker"></div>'); // Gumby styling: Select boxes (excluding select multiples).
+    form.children('form').children('select[multiple="multiple"]').wrap('<div class="picker-multiple"></div>'); // Pseudo-Gumby styling: Select multiple boxes.
+    form.children('form').children().wrapAll('<div class="field"></div>'); // Gumby styling: "field" wrapper to activate certain styles
+    $('.DecimalCompareFilter,.TardyFilter').find('input[type="number"]').addClass('xnarrow'); // Gumby styling: input text width
     form.children('form').children('input[name="filter_number"]').val(filter_i);
     filter_i = filter_i + 1;
 }
+
+// Handle the deletion of filters. Mostly cosmetic.
+$(document).ready(function() {
+  $('.delete-filter').click(function() {
+    $(this).parents('.filter').remove(); // Remove the whole block
+    // filter_i = filter_i - 1; // Decrease filter counter. Thought this was a great idea until I thought about making 4 filters, then deleting the second one, then adding another one. You'd have two fours.
+  });
+});
 
 $(function() {
   $('#scaffold_active_filters .filter').each(function(index, value) { 
