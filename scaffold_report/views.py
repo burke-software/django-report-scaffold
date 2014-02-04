@@ -1,5 +1,5 @@
 from django.core.servers.basehttp import FileWrapper
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.views.generic import ListView
@@ -18,6 +18,8 @@ class ScaffoldReportMixin(object):
             self.report = scaffold_reports.get_report(kwargs['name'])()
         except KeyError:
             raise Http404
+        if self.report.check_permissions(request) == False:
+            return HttpResponseForbidden()
         self.model = self.report.model
         return super(ScaffoldReportMixin, self).dispatch(request, *args, **kwargs)
 

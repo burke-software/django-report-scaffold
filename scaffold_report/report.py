@@ -8,12 +8,21 @@ class ScaffoldReport(object):
     building screen. All reports require customized 
     options set by the programmer.
     """
+    #: Unique name of report.
     name = ""
+    #: Verbose name of report to show users.
     name_verbose = None
+    #: Base model for this report's queryset.
     model = None
+    #: Array of field names to show on previews.
     preview_fields = ['last_name', 'first_name']
+    #: How many objects in the queryset should be show in preview.
     num_preview = 3
+    #: Filters that can be applied to the report.
     filters = []
+    #: Report is only viewable to those with these permissions.
+    #: Will default to the model's change permission if not set
+    permissions_required = []
 
     def __init__(self):
         self._possible_filters = [] # developer selected filters from subclass
@@ -25,9 +34,18 @@ class ScaffoldReport(object):
         for possible_filter in self.filters:
             if possible_filter.get_name() in field_names:
                 raise Exception(
-                    'Duplicate field names in scaffold report. Please set a different name for {}.'.format(possible_filter.get_name()))
+                    'Duplicate field names in scaffold report. '\
+                    'Please set a different name for {}.'.format(possible_filter.get_name()))
             field_names += [possible_filter.get_name()]
             self._possible_filters += [possible_filter]
+
+    def check_permissions(self, request):
+        """ Return true is user has permission to view page """
+        if self.permissions_required:
+            return request.user.has_perms(self.premissions_required)
+        else:
+            return request.user.has_perm(
+                    '{}.change_{}'.format(self.model._meta.app_label, self.model._meta.model_name))
 
     @property
     def get_name(self):

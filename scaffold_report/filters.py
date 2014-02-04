@@ -1,3 +1,11 @@
+"""
+.. module:: filters
+   :platform: Unix, Windows
+   :synopsis: A useful module indeed.
+
+.. moduleauthor:: Andrew Carter <andrew@invalid.com>
+"""
+
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.template.loader import render_to_string
@@ -9,16 +17,28 @@ import six
 
 class Filter(object):
     """ A customized filter for querysets """
+    #: Unique name of filter
     name = None
+    #: Human readable name of filter
     verbose_name = None
+    #: If set the filter will render using this django template
+    #: If not set the filter will render using scaffold_report/filter.html
     template_name = None
+    #: 
     fields = None
+    #: Optional form class to use.
     form_class = None
+    #: Optional form. If not set, an instance of the form_class will be used
     form = None
+    #: uncleaned_form data from the post
     raw_form_data = None
+    #: Add these fields to the preview and spreadsheet reports
     add_fields = []
+    #: Show this filter as on by default
     default = False
+    #: User is able to delete this filter. Should be used with default = True.
     can_remove = True
+    #: User is able to add this filter
     can_add = True
     
     def __init__(self, **kwargs):

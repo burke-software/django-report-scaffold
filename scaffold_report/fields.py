@@ -1,6 +1,8 @@
 from django import forms
 
 class SimpleCompareField(forms.ChoiceField):
+    """ Field for selecting a comparison. 
+    Includes django synxtax and verbose choices """
     default_choices = (
         ('exact', 'Equals'),
         ('gt', 'Greater than'),
