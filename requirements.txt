@@ -1,0 +1,3 @@
+django
+django-report-utils
+django-widget-tweaks

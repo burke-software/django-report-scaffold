@@ -28,5 +28,6 @@ setup(
     install_requires=[
         'django',
         'django-report-utils',
+        'django-widget-tweaks',
     ]
 )
