@@ -1,13 +1,6 @@
 API Reference
 =============
 
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-   reference
-
 ScaffoldReport
 --------------
 .. automodule:: scaffold_report.report
@@ -21,7 +14,7 @@ Filters
     :show-inheritance:
 
 Fields
------
+------
 .. automodule:: scaffold_report.fields
     :members:
     :show-inheritance:
