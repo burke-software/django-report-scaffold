@@ -58,6 +58,8 @@ class ScaffoldReport(object):
 
     @property
     def get_name(self):
+        """ Return name_verbose if it has been set; otherwise
+        return name. Replaces all spaces with underscores. """
         if self.name_verbose != None:
             return self.name_verbose
         return self.name.replace('_', ' ')
