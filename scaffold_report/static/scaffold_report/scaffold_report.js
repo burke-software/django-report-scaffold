@@ -132,6 +132,7 @@ $(function() {
 function process_errors(arr) {
   /* Process ajax error infomation
    * arr is an array generated in a django template */
+  alert("%%%");
   $('#sortable_filters .report_filter').removeClass('filter_error');
   arr.forEach(function(value) {
     var filter_li = $('#sortable_filters li#filter_'+value);

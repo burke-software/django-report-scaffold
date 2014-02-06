@@ -23,6 +23,8 @@ class ScaffoldReport(object):
     #: Report is only viewable to those with these permissions.
     #: Will default to the model's change permission if not set
     permissions_required = []
+    #: A statically defined template. Could override get_template instead.
+    appy_template = None
 
     def __init__(self):
         self._possible_filters = [] # developer selected filters from subclass
@@ -38,6 +40,13 @@ class ScaffoldReport(object):
                     'Please set a different name for {}.'.format(possible_filter.get_name()))
             field_names += [possible_filter.get_name()]
             self._possible_filters += [possible_filter]
+
+    def get_appy_template(self):
+        """ Return a appy template
+        This could be hard coded or perhaps get report_context from a filter.
+        """
+        if self.appy_template:
+            return self.appy_template
 
     def check_permissions(self, request):
         """ Return true is user has permission to view page """
@@ -71,11 +80,13 @@ class ScaffoldReport(object):
         for active_filter in self._active_filters:
             queryset = active_filter.process_filter(queryset, report_context)
             if active_filter.form.errors:
+                print active_filter.form.errors
                 self.filter_errors += [{
                     'filter': active_filter.form.data['filter_number'],
                     'errors': active_filter.form.errors,
                 }]
             else:
+                print active_filter
                 report_context = active_filter.get_report_context(report_context)
                 self.add_fields += active_filter.add_fields
         self.report_context = dict(self.report_context.items() + report_context.items())
@@ -105,7 +116,6 @@ class ScaffoldReport(object):
             result_row = []
             for field in preview_fields:
                 field = self.get_field_name(field)
-                print field
                 cell = getattr(obj, field)
                 if callable(cell):
                     cell = cell()

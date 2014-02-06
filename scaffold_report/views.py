@@ -63,10 +63,10 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
             response['Location'] += '?id__in={}'.format(ids)
             return response
         elif download_type == "appy":
-            template_name = "/tmp/in.odt" # TEMP
             filename = 'report'
             ext = '.odt'
             appy_context = self.report.get_appy_context()
+            template_name = self.report.get_appy_template()
             from appy.pod.renderer import Renderer
             outfile_name = tempfile.gettempdir() + '/appy' + str(time.time()) + ext
             renderer = Renderer(template_name, appy_context, outfile_name)

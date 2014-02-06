@@ -14,6 +14,7 @@ from .fields import SimpleCompareField
 from abc import abstractmethod
 import inspect
 import six
+import re
 
 class Filter(object):
     """ A customized filter for querysets """
@@ -107,7 +108,8 @@ class Filter(object):
     def get_verbose_name(self):
         if self.verbose_name:
             return self.verbose_name
-        return self.get_name()
+        name = self.get_name()
+        return re.sub(r"(\w)([A-Z])", r"\1 \2", name)
 
     def get_name(self):
         """ return unique name of this filter """
@@ -131,20 +133,49 @@ class DecimalCompareFilter(Filter):
         return queryset.filter(**compare_kwarg)
 
 
-class ModelMultipleChoiceFilter(Filter):
-    fields = [forms.ModelMultipleChoiceField,]
+class ModelChoiceFilter(Filter):
+    """ Select object from a queryset """
+    fields = [forms.ModelChoiceField,]
+    #: String used in the Django orm filter function. See queryset_filter()
     compare_field_string = None
+    #: Model used for queryset. Set this for any object of such model.
+    model = None
+    #: queryset that populates the widget. Model is not needed if this is set.
     queryset = None
+
+    def get_queryset(self):
+        """ Get the queryset that will populare the widget """
+        if self.queryset:
+            return self.queryset
+        return self.model.objects.all()
     
     def build_form(self):
+        queryset = self.get_queryset()
         self.form = forms.Form()
         self.form.fields['filter_number'] = forms.IntegerField(widget=forms.HiddenInput())
-        self.form.fields['field_0'] = forms.ModelMultipleChoiceField(self.queryset, label='')
+        self.form.fields['field_0'] = forms.ModelChoiceField(queryset, label='')
     
+    def queryset_filter(self, queryset, report_context=None, **kwargs):
+        selected = self.cleaned_data['field_0']
+        compare_kwarg = {self.compare_field_string: selected}
+        return queryset.filter(**compare_kwarg)
+
+
+class ModelMultipleChoiceFilter(ModelChoiceFilter):
+    """ Select multiple objects from a queryset """
+    fields = [forms.ModelMultipleChoiceField,]
+
+    def build_form(self):
+        queryset = self.get_queryset()
+        self.form = forms.Form()
+        self.form.fields['filter_number'] = forms.IntegerField(widget=forms.HiddenInput())
+        self.form.fields['field_0'] = forms.ModelMultipleChoiceField(queryset, label='')
+
     def queryset_filter(self, queryset, report_context=None, **kwargs):
         selected = self.cleaned_data['field_0']
         compare_kwarg = {self.compare_field_string + '__in': selected}
         return queryset.filter(**compare_kwarg)
+
 
 
 class IntCompareFilter(DecimalCompareFilter):
