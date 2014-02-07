@@ -82,7 +82,7 @@ function view_results(type) {
       function(data) {
         $('#preview_area').html(data);
         $('#preview_area').fadeIn();
-      }
+      } 
     );
   } else {
     $.form('view/?type=' + type, data_dict, 'POST').submit();
@@ -98,6 +98,7 @@ function add_filter(select) {
 function prepare_filter(select) {
     var value = select.options[select.selectedIndex].value; // Outputs something like "TardyFilter"
     var form = $('#filter_copy_area .' + value).clone(true); // Set clone to true to duplicate event handler data as well (i.e. .click() action for delete-filter)
+    $(form).attr('id', 'filter_' + filter_i);
 
     $('#scaffold_active_filters').append(form);
     $('#add_new_filter').val('');
@@ -107,17 +108,9 @@ function prepare_filter(select) {
 $(document).ready(function() {
   $('.delete-filter').click(function() {
     $(this).parents('.filter').remove(); // Remove the whole block
+    // filter_i = filter_i - 1; // Decrease filter counter. Thought this was a great idea until I thought about making 4 filters, then deleting the second one, then adding another one. You'd have two fours.
   });
 });
-
-function reindex_filters() {
-    var i = 0;
-    $('#scaffold_active_filters .filter').each(function(index, value) { 
-        $(value).attr('id', 'filter_' + i);
-        $(value).children('form').children('input[name="filter_number"]').val(i);
-        i += 1;
-    });
-}
 
 $(function() {
   reindex_filters();
