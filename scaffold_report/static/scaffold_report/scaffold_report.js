@@ -102,11 +102,11 @@ function prepare_filter(select) {
 
     $('#scaffold_active_filters').append(form);
     $('#add_new_filter').val('');
-    form.children('form').children('input[type="text"],input[type="number"]').addClass('input'); // Gumby styling. Adds the appropriate class to text and number inputs.
-    form.children('form').children('select').not('[multiple="multiple"]').wrap('<div class="picker"></div>'); // Gumby styling: Select boxes (excluding select multiples).
-    form.children('form').children('select[multiple="multiple"]').wrap('<div class="picker-multiple"></div>'); // Pseudo-Gumby styling: Select multiple boxes.
-    form.children('form').children().wrapAll('<div class="field"></div>'); // Gumby styling: "field" wrapper to activate certain styles
-    $('.DecimalCompareFilter,.TardyFilter').find('input[type="number"]').addClass('xnarrow'); // Gumby styling: input text width
+    //form.children('form').children('input[type="text"],input[type="number"]').addClass('input'); // Gumby styling. Adds the appropriate class to text and number inputs.
+    //form.children('form').children('select').not('[multiple="multiple"]').wrap('<div class="picker"></div>'); // Gumby styling: Select //boxes (excluding select multiples).
+    //form.children('form').children('select[multiple="multiple"]').wrap('<div class="picker-multiple"></div>'); // Pseudo-Gumby styling: Select multiple boxes.
+    //form.children('form').children().wrapAll('<div class="field"></div>'); // Gumby styling: "field" wrapper to activate certain styles
+    //$('.DecimalCompareFilter,.TardyFilter').find('input[type="number"]').addClass('xnarrow'); // Gumby styling: input text width
     form.children('form').children('input[name="filter_number"]').val(filter_i);
     filter_i = filter_i + 1;
 }
@@ -117,6 +117,8 @@ $(document).ready(function() {
     $(this).parents('.filter').remove(); // Remove the whole block
     // filter_i = filter_i - 1; // Decrease filter counter. Thought this was a great idea until I thought about making 4 filters, then deleting the second one, then adding another one. You'd have two fours.
   });
+
+  $( "#scaffold_active_filters" ).sortable({ handle: ".handle" });
 });
 
 $(function() {

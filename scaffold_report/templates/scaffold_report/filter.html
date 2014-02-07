@@ -1,11 +1,37 @@
 <div class="filter {{ filter.get_name }}" data-name="{{ filter.get_name }}">
   <h3 class="filter-title">{{ filter.get_verbose_name }}</h3>
   <form method="post" class="filter_form">
-	<a href="javascript:void(0);" class="delete-filter"><i class="icon-cancel-circled"></i></a>
+  <a href="javascript:void(0);" class="delete-filter"><i class="icon-cancel-circled"></i></a>
+  <a href="javascript:void(0);" class="handle"><i class="icon-arrow-combo"></i></a>
+	<a href="javascript:void(0);" class="column-in-report"><i class="icon-list-add"></i></a>
     {% if filter.template_name %}
       {{ filter.render_form }}
     {% else %}
-      {{ filter.form }}
+      {# filter.form #}
+{% load widget_tweaks %}
+
+    {% for field in filter.form %}
+      {% if field.is_hidden %}
+        {{ field }}
+      {% elif field|widget_type == 'select' %}
+        <div class="picker">
+          {{ field }}
+        </div>
+      {% elif field|widget_type == 'selectmultiple' %}
+        <div class="picker-multiple">
+          {{ field }}
+        </div>
+      {% else %}
+        <div class="field">
+            {{ field.errors }}
+            {# field.label_tag #}
+
+            {% render_field field class+="input xnarrow" placeholder+=field|widget_type %}
+
+        </div>
+      {% endif %}
+    {% endfor %}
+
       {{ filter.post_form_text }}
     {% endif %}
   </form>
