@@ -1,7 +1,9 @@
 <script  type="text/javascript">
-var arr = [];
+var error_i = [];
+var errors = [];
 {% for filter_error in filter_errors %}
-  arr.push("{{ filter_error.filter }}");
+  error_i.push("{{ filter_error.filter }}");
+  errors.push('{{ filter_error.errors }}');
 {% endfor %}
-process_errors(arr);
+process_errors(error_i);
 </script>
