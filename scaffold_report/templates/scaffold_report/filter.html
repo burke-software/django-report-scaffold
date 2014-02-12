@@ -8,7 +8,7 @@
       {{ filter.render_form }}
     {% else %}
       {# filter.form #}
-{% load widget_tweaks %}
+      {% load widget_tweaks %}
 
     {% for field in filter.form %}
       {% if field.is_hidden %}

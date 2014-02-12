@@ -72,6 +72,11 @@ class ScaffoldReport(object):
                     filter_instance.build_form()
                     filter_instance.raw_form_data = filter_data.get('form', None)
                     self._active_filters += [filter_instance]
+                    if not filter_instance.get_form_data():
+                        self.filter_errors += [{
+                            'filter': filter_instance.form.data['filter_number'],
+                            'errors': filter_instance.form.errors,
+                        }]
 
     def get_queryset(self):
         """ Return a queryset of the model
@@ -82,13 +87,8 @@ class ScaffoldReport(object):
         for active_filter in self._active_filters:
             queryset = active_filter.process_filter(queryset, report_context)
             if active_filter.form.errors:
-                print active_filter.form.errors
-                self.filter_errors += [{
-                    'filter': active_filter.form.data['filter_number'],
-                    'errors': active_filter.form.errors,
-                }]
+                pass
             else:
-                print active_filter
                 report_context = active_filter.get_report_context(report_context)
                 self.add_fields += active_filter.add_fields
         self.report_context = dict(self.report_context.items() + report_context.items())

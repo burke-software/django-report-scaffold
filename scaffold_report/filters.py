@@ -85,6 +85,7 @@ class Filter(object):
         if not self.form_class:
             self.form_class = forms.Form
         self.form = self.form_class()
+
         self.form.fields['filter_number'] = forms.IntegerField(widget=forms.HiddenInput())
         if self.fields:
             for i, field in enumerate(self.fields):

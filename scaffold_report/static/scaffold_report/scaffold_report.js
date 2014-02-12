@@ -57,6 +57,15 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function process_errors(filter_errors) {
+  /* Process ajax error infomation
+   * arr is an array generated in a django template */
+  $('#scaffold_active_filters .filter').removeClass('filter_error');
+  filter_errors.forEach(function(filter_error, i) {
+      var filter_div = $('#scaffold_active_filters div#filter_'+filter_error.filter);
+      filter_div.addClass('filter_error');
+  });
+}
 
 function view_results(type) {
   var csrf_token = getCookie('csrftoken');
@@ -75,18 +84,30 @@ function view_results(type) {
     data: JSON.stringify(filter_data),
   }
   
-  if (type == 'preview') { // AJAX
+  if (type == 'preview') {
     $.post(
       'view/?type=' + type,
       data_dict,
       function(data) {
-        $('#preview_area').html(data);
+        $('#preview_area').html(data.preview_html);
+        process_errors(data.filter_errors);
         $('#preview_area').fadeIn();
       } 
     );
   } else {
     $.form('view/?type=' + type, data_dict, 'POST').submit();
   }
+}
+
+
+
+function reindex_filters() {
+    var i = 0;
+    $('#scaffold_active_filters .filter').each(function(index, value) { 
+        $(value).attr('id', 'filter_' + i);
+        $(value).children('form').children('input[name="filter_number"]').val(i);
+        i += 1;
+    });
 }
 
 function add_filter(select) {
@@ -98,7 +119,6 @@ function add_filter(select) {
 function prepare_filter(select) {
     var value = select.options[select.selectedIndex].value; // Outputs something like "TardyFilter"
     var form = $('#filter_copy_area .' + value).clone(true); // Set clone to true to duplicate event handler data as well (i.e. .click() action for delete-filter)
-    $(form).attr('id', 'filter_' + filter_i);
 
     $('#scaffold_active_filters').append(form);
     $('#add_new_filter').val('');
@@ -108,7 +128,6 @@ function prepare_filter(select) {
 $(document).ready(function() {
   $('.delete-filter').click(function() {
     $(this).parents('.filter').remove(); // Remove the whole block
-    // filter_i = filter_i - 1; // Decrease filter counter. Thought this was a great idea until I thought about making 4 filters, then deleting the second one, then adding another one. You'd have two fours.
   });
 });
 
@@ -118,15 +137,3 @@ $(function() {
   view_results('preview');
 });
 
-function process_errors(arr) {
-  /* Process ajax error infomation
-   * arr is an array generated in a django template */
-  $('#scaffold_active_filters .filter').removeClass('filter_error');
-  var i = 0;
-  arr.forEach(function(value) {
-    var filter_div = $('#scaffold_active_filters div#filter_'+value);
-    filter_div.addClass('filter_error');
-    filter_div.append(errors[i]);
-    i += 1;
-  });
-}

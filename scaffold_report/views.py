@@ -1,6 +1,7 @@
 from django.core.servers.basehttp import FileWrapper
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
@@ -9,6 +10,7 @@ from django.utils import simplejson
 from report_utils.utils import DataExportMixin
 from .report import scaffold_reports
 import tempfile
+import json
 import time
 import os
 
@@ -45,13 +47,17 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
         if request.POST.get('data', None):
             data = simplejson.loads(request.POST['data'])
             self.report.handle_post_data(data)
-            context['filter_errors'] = self.report.filter_errors
-        
-        if download_type == "preview":
             context['object_list'] = self.report.report_to_list(
                 user=self.request.user, preview=True)
             context['headers'] = self.report.get_preview_fields()
-            return render(request, self.template_name, context)
+
+            preview_html = render_to_string(self.template_name, context)
+
+            response_data = {}
+            response_data['preview_html'] = preview_html
+            response_data['filter_errors'] = self.report.filter_errors
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
         elif download_type == "xlsx":
             data = self.report.report_to_list(self.request.user)
             return self.list_to_xlsx_response(data)
