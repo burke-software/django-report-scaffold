@@ -21,6 +21,8 @@
         <div class="picker-multiple">
           {{ field }}
         </div>
+      {% elif field|widget_type == 'checkboxinput' %}
+        {{ field }}
       {% else %}
         <div class="field">
             {{ field.errors }}
