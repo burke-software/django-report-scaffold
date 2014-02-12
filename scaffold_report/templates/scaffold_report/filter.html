@@ -1,7 +1,7 @@
-<div class="filter {{ filter.get_name }}" data-name="{{ filter.get_name }}">
+<div class="filter {{ filter.get_name }}{% if filter.can_remove %} removable{% endif %}" data-name="{{ filter.get_name }}">
   <h3 class="filter-title">{{ filter.get_verbose_name }}</h3>
   <form method="post" class="filter_form">
-    Can Remove? {{ filter.can_remove }}
+
     {% if filter.can_remove %}
       <a href="javascript:void(0);" class="delete-filter"><i class="icon-cancel-circled"></i></a>
     {% endif %}
