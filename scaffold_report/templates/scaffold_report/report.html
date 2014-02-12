@@ -11,16 +11,18 @@
           {% endif %}
         {% endfor %}
       </div>
-      <h3>Add New Rule</h3>
-      <div class="field picker">
-        <select id="add_new_filter" onchange="add_filter(this)">
-          <option value="">Select the rule you want to add</option>
-          {% for filter in filters %}
-            {% if filter.can_add %}
-              <option value="{{ filter.get_name }}">{{ filter.get_verbose_name }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
+      <div id="add-new-rule-block">
+        <h3>Add New Rule</h3>
+        <div class="field picker">
+          <select id="add_new_filter" onchange="add_filter(this)">
+            <option value="">Select the rule you want to add</option>
+            {% for filter in filters %}
+              {% if filter.can_add %}
+                <option value="{{ filter.get_name }}">{{ filter.get_verbose_name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
       </div>
     </div>
 
