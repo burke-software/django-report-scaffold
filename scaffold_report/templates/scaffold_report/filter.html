@@ -1,41 +1,48 @@
-<div class="filter {{ filter.get_name }}{% if filter.can_remove %} removable{% endif %}" data-name="{{ filter.get_name }}">
-  <h3 class="filter-title">{{ filter.get_verbose_name }}</h3>
-  <form method="post" class="filter_form">
+<div class="row filter {{ filter.get_name }}{% if filter.can_remove %} removable{% endif %}" data-name="{{ filter.get_name }}">
+  <div class="three columns">
+    <h3 class="filter-title">{{ filter.get_verbose_name }}</h3>
+  </div>
+  <div class="nine columns">
+    <form method="post" class="filter_form">
 
-    {% if filter.can_remove %}
-      <a href="javascript:void(0);" class="delete-filter"><i class="icon-cancel-circled"></i></a>
-    {% endif %}
-    {% if filter.template_name %}
-      {{ filter.render_form }}
-    {% else %}
-      {# filter.form #}
-      {% load widget_tweaks %}
-
-    {% for field in filter.form %}
-      {% if field.is_hidden %}
-        {{ field }}
-      {% elif field|widget_type == 'select' %}
-        <div class="picker">
-          {{ field }}
-        </div>
-      {% elif field|widget_type == 'selectmultiple' %}
-        <div class="picker-multiple">
-          {{ field }}
-        </div>
-      {% elif field|widget_type == 'checkboxinput' %}
-        {{ field }}
+      {% if filter.template_name %}
+        {{ filter.render_form }}
       {% else %}
-        <div class="field">
-            {{ field.errors }}
-            {# field.label_tag #}
+        {# filter.form #}
+        {% load widget_tweaks %}
 
-            {% render_field field class+="input xnarrow" placeholder+=field|widget_type %}
+      <div class="field">
+        {% for field in filter.form %}
+          {% if field.is_hidden %}
+            {{ field }}
+          {% elif field|widget_type == 'select' %}
+            <div class="picker">
+              {{ field }}
+            </div>
+          {% elif field|widget_type == 'selectmultiple' %}
+            <div class="picker-multiple">
+              {{ field }}
+            </div>
+          {% elif field|widget_type == 'checkboxinput' %}
+            <div class="dsr-checkbox">
+              {{ field }}
+            </div>
+          {% else %}
+                {{ field.errors }}
+                {# field.label_tag #}
 
-        </div>
+                {% render_field field class+="input xnarrow" placeholder+=field|widget_type %}
+
+          {% endif %}
+        {% endfor %}
+        
+        {{ filter.post_form_text }}
+      </div>
+
       {% endif %}
-    {% endfor %}
-
-      {{ filter.post_form_text }}
-    {% endif %}
-  </form>
+    </form>
+  </div>
+  {% if filter.can_remove %}
+    <a href="javascript:void(0);" class="delete-filter"><i class="icon-cancel-circled"></i></a>
+  {% endif %}
 </div>
