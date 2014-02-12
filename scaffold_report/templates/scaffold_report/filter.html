@@ -31,12 +31,12 @@
                 {{ field.errors }}
                 {# field.label_tag #}
 
-                {% render_field field class+="input xnarrow" placeholder+=field|widget_type %}
+                {% render_field field class+="input xnarrow" %}
 
           {% endif %}
         {% endfor %}
-        
-        {{ filter.post_form_text }}
+
+        <span class="post-form-text">{{ filter.post_form_text }}</span>
       </div>
 
       {% endif %}
