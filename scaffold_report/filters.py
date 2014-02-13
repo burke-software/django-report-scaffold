@@ -25,7 +25,7 @@ class Filter(object):
     #: If set the filter will render using this django template
     #: If not set the filter will render using scaffold_report/filter.html
     template_name = None
-    #: 
+    #: Define fields here that will be appended together to make a generic form 
     fields = None
     #: Optional form class to use.
     form_class = None

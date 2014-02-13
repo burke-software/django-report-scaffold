@@ -75,7 +75,7 @@ function view_results(type) {
   $(filters).each(function(key, value) { 
     var filter_dict = {
       'name': $(value).data('name'),
-      'form': $(value).children('form.filter_form').serialize()
+      'form': $(value).find('form.filter_form').serialize()
     }
     filter_data.push(filter_dict);
   })
@@ -105,7 +105,7 @@ function reindex_filters() {
     var i = 0;
     $('#scaffold_active_filters .filter').each(function(index, value) { 
         $(value).attr('id', 'filter_' + i);
-        $(value).children('form').children('input[name="filter_number"]').val(i);
+        $(value).find('form input[name="filter_number"]').val(i);
         i += 1;
     });
 }

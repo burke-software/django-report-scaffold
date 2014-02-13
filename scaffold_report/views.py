@@ -51,8 +51,8 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
                 user=self.request.user, preview=True)
             context['headers'] = self.report.get_preview_fields()
 
+        if download_type == "preview":
             preview_html = render_to_string(self.template_name, context)
-
             response_data = {}
             response_data['preview_html'] = preview_html
             response_data['filter_errors'] = self.report.filter_errors

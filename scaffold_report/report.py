@@ -91,7 +91,7 @@ class ScaffoldReport(object):
             else:
                 report_context = active_filter.get_report_context(report_context)
                 self.add_fields += active_filter.add_fields
-        self.report_context = dict(self.report_context.items() + report_context.items())
+            self.report_context = dict(self.report_context.items() + report_context.items())
         return queryset
 
     def get_appy_context(self):
