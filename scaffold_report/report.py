@@ -90,7 +90,7 @@ class ScaffoldReport(object):
                 pass
             else:
                 report_context = active_filter.get_report_context(report_context)
-                self.add_fields += active_filter.add_fields
+                self.add_fields += active_filter.get_add_fields()
             self.report_context = dict(self.report_context.items() + report_context.items())
         return queryset
 
@@ -105,7 +105,7 @@ class ScaffoldReport(object):
     def report_to_list(self, user, preview=False):
         """ Convert to python list """
         queryset = self.get_queryset()
-        if preview:
+        if preview and False:
             queryset = queryset[:self.num_preview]
 
         if self.preview_fields:

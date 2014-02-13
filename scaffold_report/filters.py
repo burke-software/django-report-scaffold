@@ -59,6 +59,10 @@ class Filter(object):
         Only called if template_name is defined """
         context = self.get_template_context()
         return render_to_string(self.template_name, context)
+
+    def get_add_fields(self):
+        """ Returns the fields to add to previews and spreadsheet reports """
+        return self.add_fields
     
     def process_filter(self, queryset, report_context=None):
         """ Run the actual filter based on client data """
