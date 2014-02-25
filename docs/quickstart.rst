@@ -10,6 +10,17 @@ Installation
 
 Creating your first report
 --------------------------
-Create a file called ``scaffold_reports.py`` in your projects app folder.
+Create a file called ``scaffold_reports.py`` in your projects app folder. Here is a sample report to get started.::
 
+  from foo.models import Order
+  from scaffold_report.report import ScaffoldReport, scaffold_reports
+  
+  class FooReport(ScaffoldReport):
+      name = "Reports"
+      model = Order
+      filters = (
+      )
+  
+  scaffold_reports.register('foo_report', FooReport)
 
+Now go to ``/reports/foo_report/`` to view it in a browser.
