@@ -9,12 +9,21 @@
       <div id="scaffold_active_filters">
         {% for filter in filters %}
           {% if filter.default %}
-            {% include "scaffold_report/filter.html" %}
+            {% if not filter.can_remove %}
+              {% include "scaffold_report/filter.html" %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% for filter in filters %}
+          {% if filter.default %}
+            {% if filter.can_remove %}
+              {% include "scaffold_report/filter.html" %}
+            {% endif %}
           {% endif %}
         {% endfor %}
       </div>
     </div>
-    
+
     <div class="row" id="add-new-rule-block">
       <div class="three columns">
         <h3 class="filter-subheads">Add Another Filter</h3>
