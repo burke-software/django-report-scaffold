@@ -2,58 +2,74 @@
 
 {% block content %}
   <h2>{{ report.get_name|title }}</h2>
-
-  <h3 class="filter-subheads">Filters</h3>
-  <div id="scaffold">
-    <div id="scaffold_filters">
-      <div id="scaffold_active_filters">
-        {% for filter in filters %}
-          {% if filter.default %}
-            {% include "scaffold_report/filter.html" %}
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    
-    <div class="row" id="add-new-rule-block">
-      <div class="three columns">
-        <h3 class="filter-subheads">Add Another Filter</h3>
-      </div>
-      <div class="nine columns">
-        <div class="field picker">
-          <select id="add_new_filter" onchange="add_filter(this)">
-            <option value="">Select the rule you want to add</option>
+  
+  <div class="row">
+    <div class="ten columns">
+      <h3 class="filter-subheads">Filters</h3>
+      <div id="scaffold">
+        <div id="scaffold_filters">
+          <div id="scaffold_active_filters">
             {% for filter in filters %}
-              {% if filter.can_add %}
-                <option value="{{ filter.get_name }}">{{ filter.get_verbose_name }}</option>
+              {% if filter.default %}
+                {% include "scaffold_report/filter.html" %}
               {% endif %}
             {% endfor %}
-          </select>
+          </div>
+        </div>
+        
+        <div class="row" id="add-new-rule-block">
+          <div class="three columns">
+            <h3 class="filter-subheads">Add Another Filter</h3>
+          </div>
+          <div class="nine columns">
+            <div class="field picker">
+              <select id="add_new_filter" onchange="add_filter(this)">
+                <option value="">Select the rule you want to add</option>
+                {% for filter in filters %}
+                  {% if filter.can_add %}
+                    <option value="{{ filter.get_name }}">{{ filter.get_verbose_name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+    
+        <div id="filter_copy_area" style="display:none;">
+          {% for filter in filters %}
+            {% if filter.can_add %}
+              {% include "scaffold_report/filter.html" %}
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
+      
     </div>
-
-    <div id="filter_copy_area" style="display:none;">
-      {% for filter in filters %}
-        {% if filter.can_add %}
-          {% include "scaffold_report/filter.html" %}
-        {% endif %}
+    <div class="two columns" id="report_sidebar_area">
+      {% for report_button in report.report_buttons %}
+        <div class="btn secondary">
+          <input type="submit" onclick="view_results('{{ report_button.name }}')" name="{{ report_button.name }}" value="{{ report_button.get_name }}"/>
+        </div>
       {% endfor %}
     </div>
-
+  </div>
+      
+  <div class="row">
     <div style="clear:both"/>
-    <div class="primary btn">
-      <a href="javascript:void(0);" onclick="view_results('preview');">Update</a>
-    </div>
-    <div class="primary btn">
-      <a href="javascript:void(0);" onclick="view_results('xlsx');">Download as xlsx</a>
-    </div>
-    <div class="primary btn">
-      <a href="javascript:void(0);" onclick="view_results('django_admin');">Edit</a>
-    </div>
-    <div class="primary btn">
-      <a href="javascript:void(0);" onclick="view_results('appy');">Export to template</a>
-    </div>
+    {% block buttons %}
+        <div class="primary btn">
+          <a href="javascript:void(0);" onclick="view_results('preview');">Update</a>
+        </div>
+        <div class="primary btn">
+          <a href="javascript:void(0);" onclick="view_results('xlsx');">Download as xlsx</a>
+        </div>
+        <div class="primary btn">
+          <a href="javascript:void(0);" onclick="view_results('django_admin');">Edit</a>
+        </div>
+        <div class="primary btn">
+          <a href="javascript:void(0);" onclick="view_results('appy');">Export to template</a>
+        </div>
+    {% endblock %}
 
     <div id="preview_area">
     </div>

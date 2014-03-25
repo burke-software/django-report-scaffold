@@ -15,11 +15,14 @@ class ScaffoldReport(object):
     #: Base model for this report's queryset.
     model = None
     #: Array of field names to show on previews.
-    preview_fields = ['last_name', 'first_name']
+    preview_fields = ['id']
     #: How many objects in the queryset should be show in preview.
     num_preview = 3
     #: Filters that can be applied to the report.
     filters = []
+    #: Buttons will show in sidebar area. These can be premade reports and give the
+    #: user more options than just clicking submit
+    report_buttons = []
     #: Report is only viewable to those with these permissions.
     #: Will default to the model's change permission if not set
     permissions_required = []
@@ -155,6 +158,32 @@ class ScaffoldReport(object):
             return preview_fields
         else:
             return [self.model._meta.verbose_name_plural.title()]
+        
+
+class ReportButton(object):
+    """ An alternative way to submit a report.
+    Could be used for one off reports that behave differently.
+    """
+    #: For button name attr
+    name = ""
+    name_verbose = None
+    #: For button value attr
+    value = ""
+    #: When true the queryset is processed first (so filters will run) and passed to get_report
+    accepts_queryset = True
+    
+    @property
+    def get_name(self):
+        """ Return name_verbose if it has been set; otherwise
+        return name. Replaces all spaces with underscores. """
+        if self.name_verbose != None:
+            return self.name_verbose
+        return self.name.replace('_', ' ')
+    
+    def get_report(self, context=None):
+        """ This function will call to generate the actual report
+        Should return a valid response """
+        pass
 
 
 try:

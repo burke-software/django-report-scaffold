@@ -3,7 +3,7 @@
    :platform: Unix, Windows
    :synopsis: A useful module indeed.
 
-.. moduleauthor:: Andrew Carter <andrew@invalid.com>
+.. moduleauthor:: 
 """
 
 from django import forms

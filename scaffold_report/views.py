@@ -50,6 +50,10 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
             context['object_list'] = self.report.report_to_list(
                 user=self.request.user, preview=True)
             context['headers'] = self.report.get_preview_fields()
+        
+        for button in self.report.report_buttons:
+            if button.name == download_type:
+                return button.get_report(context)
 
         if download_type == "preview":
             preview_html = render_to_string(self.template_name, context)
