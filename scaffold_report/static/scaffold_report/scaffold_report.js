@@ -71,7 +71,7 @@ function view_results(type) {
   var csrf_token = getCookie('csrftoken');
   var filters = $('#scaffold_active_filters .filter');
   var filter_data = []
-  $('#preview_area').fadeOut();
+  $('#preview_area').hide();
   $(filters).each(function(key, value) { 
     var filter_dict = {
       'name': $(value).data('name'),
