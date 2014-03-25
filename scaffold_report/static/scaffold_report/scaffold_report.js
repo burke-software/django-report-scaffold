@@ -124,10 +124,25 @@ function prepare_filter(select) {
     $('#add_new_filter').val('');
 }
 
-// Handle the deletion of filters. Mostly cosmetic.
 $(document).ready(function() {
+  // Handle the deletion of filters. Mostly cosmetic.
   $('.delete-filter').click(function() {
     $(this).parents('.filter').remove(); // Remove the whole block
+  });
+
+  // Selected Template doesn't need to be visible (or enabled) if a template isn't selected.
+  if ($('.TemplateSelection select').val() == "") {
+      $('#export-to-template').hide();
+  }
+
+  $('.TemplateSelection select').change(function() {
+    if ($(this).val() != "") {
+      $('#export-to-template').show();
+      // $('#export-to-template').removeAttr('disabled').removeClass('default').addClass('primary');
+    } else {
+      $('#export-to-template').hide();
+      // $('#export-to-template').attr('disabled','disabled').removeClass('primary').addClass('default');
+    }
   });
 });
 
