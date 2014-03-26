@@ -4,14 +4,23 @@
   <h2>{{ report.get_name|title }}</h2>
   
   <div class="row">
-    <div class="ten columns">
+    <div class="twelve columns">
       <h3 class="filter-subheads">Filters</h3>
       <div id="scaffold">
         <div id="scaffold_filters">
           <div id="scaffold_active_filters">
             {% for filter in filters %}
               {% if filter.default %}
-                {% include "scaffold_report/filter.html" %}
+                {% if not filter.can_remove %}
+                  {% include "scaffold_report/filter.html" %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            {% for filter in filters %}
+              {% if filter.default %}
+                {% if filter.can_remove %}
+                  {% include "scaffold_report/filter.html" %}
+                {% endif %}
               {% endif %}
             {% endfor %}
           </div>
@@ -45,34 +54,35 @@
       </div>
       
     </div>
-    <div class="two columns" id="report_sidebar_area">
-      {% for report_button in report.report_buttons %}
-        <div class="btn secondary">
-          <input type="submit" onclick="view_results('{{ report_button.name }}')" name="{{ report_button.name }}" value="{{ report_button.get_name }}"/>
-        </div>
-      {% endfor %}
-    </div>
   </div>
       
   <div class="row">
     <div style="clear:both"/>
     {% block buttons %}
-        <div class="primary btn">
-          <a href="javascript:void(0);" onclick="view_results('preview');">Update</a>
+        <div class="medium primary btn">
+          <button href="javascript:void(0);" onclick="view_results('preview');">Update Preview</button>
         </div>
-        <div class="primary btn">
-          <a href="javascript:void(0);" onclick="view_results('xlsx');">Download as xlsx</a>
+        <div class="medium primary btn">
+          <button href="javascript:void(0);" onclick="view_results('django_admin');">Edit in Admin</button>
         </div>
-        <div class="primary btn">
-          <a href="javascript:void(0);" onclick="view_results('django_admin');">Edit</a>
+        <div class="medium primary btn">
+          <button href="javascript:void(0);" onclick="view_results('xlsx');">Download XSLX File</button>
         </div>
-        <div class="primary btn">
-          <a href="javascript:void(0);" onclick="view_results('appy');">Export to template</a>
+        <div id="export-to-template" class="medium primary btn">
+          <button onclick="view_results('appy');" disabled>Export to Selected Template</button>
         </div>
     {% endblock %}
-
+  </div>
+  <div class="row">
+    {% for report_button in report.report_buttons %}
+      <div class="medium btn secondary">
+        <button type="submit" onclick="view_results('{{ report_button.name }}')" name="{{ report_button.name }}">{{ report_button.get_name }}</button>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="row">
     <div id="preview_area">
     </div>
-
   </div>
+
 {% endblock %}
