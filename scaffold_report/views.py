@@ -53,7 +53,7 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
         
         for button in self.report.report_buttons:
             if button.name == download_type:
-                return button.get_report(context)
+                return button.get_report(self, context)
 
         if download_type == "preview":
             preview_html = render_to_string(self.template_name, context)
