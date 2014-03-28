@@ -62,16 +62,50 @@ function process_errors(filter_errors) {
    * arr is an array generated in a django template */
   $('#scaffold_active_filters .filter').removeClass('filter_error');
   filter_errors.forEach(function(filter_error, i) {
-      var filter_div = $('#scaffold_active_filters div#filter_'+filter_error.filter);
-      filter_div.addClass('filter_error');
+      if (filter_error.filter != "") {
+        $('.generate-warning').show();
+      }
+      
+      var filterDiv = $('#scaffold_active_filters div#filter_'+filter_error.filter);
+      filterDiv.addClass('filter_error');
+
+      var badFields = []; // Create array to get bad field names
+      for (o in filter_error.errors) { // Populate array, excluding filter numbers
+        if (filter_error.errors.hasOwnProperty(o) && typeof(o) !== 'function' && o != 'filter_number') {
+          badFields.push(o);
+        }
+      }
+      badFields.reverse(); // Errors were coming in backwards
+      
+      errorText = ""; // Define error text
+
+      if (badFields.length > 1) { // Handle multiple errors
+        errorText = "Notes on highlighted fields, L to R:";
+      }
+
+      for (i = 0; i < badFields.length; i++) {
+        var numberError = ""; // Handle multiple errors
+        if (badFields.length > 1) {
+          numberError = i+1 + ". ";
+        }
+
+        filterDiv.find('#id_'+badFields[i]).addClass('bad-field'); // Tag bad field with class
+        errorText += " " + numberError + filter_error.errors[badFields[i]][0]; // Prep error text
+      }
+
+      filterDiv.find('.error-text').text(errorText); // Populate error text
+
   });
 }
 
 function view_results(type) {
   var csrf_token = getCookie('csrftoken');
   var filters = $('#scaffold_active_filters .filter');
-  var filter_data = []
+  var filter_data = [];
+  $('.error-text').text('');
+  $('#scaffold').find('.bad-field').removeClass('bad-field');
   $('#preview_area').hide();
+  $('.generate-warning').hide();
   $(filters).each(function(key, value) { 
     var filter_dict = {
       'name': $(value).data('name'),
@@ -137,10 +171,10 @@ $(document).ready(function() {
 
   $('.TemplateSelection select').change(function() {
     if ($(this).val() != "") {
-      $('#export-to-template').show();
+      $('#export-to-template').fadeIn();
       // $('#export-to-template').removeAttr('disabled').removeClass('default').addClass('primary');
     } else {
-      $('#export-to-template').hide();
+      $('#export-to-template').fadeOut();
       // $('#export-to-template').attr('disabled','disabled').removeClass('primary').addClass('default');
     }
   });

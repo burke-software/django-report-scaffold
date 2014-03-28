@@ -3,6 +3,20 @@
   padding-bottom: 1em;
   min-height: 50px;
 }
-#scaffold.filter_error {
-    border: solid red;
+
+#scaffold_active_filters .filter_error {
+    background-color: #ffffcc;
+}
+
+.bad-field {
+	border: 1px solid #333300!important;
+}
+
+.error-text {
+	line-height: 1.25em;
+	margin-top: 5px;
+}
+
+.generate-warning {
+	display: none;
 }
