@@ -134,6 +134,19 @@ function view_results(type) {
 }
 
 
+var delayValidation;
+
+function waitforit_view_results(type, stop) {
+  if (stop == true) {
+    console.log("cancel timeout");
+    clearTimeout(delayValidation);
+  } else {
+    console.log("timeout triggered");
+    delayValidation = window.setTimeout(function () {
+      view_results(type);
+    }, 5000);  
+  }
+}
 
 function reindex_filters() {
     var i = 0;
@@ -172,11 +185,40 @@ $(document).ready(function() {
   $('.TemplateSelection select').change(function() {
     if ($(this).val() != "") {
       $('#export-to-template').fadeIn();
-      // $('#export-to-template').removeAttr('disabled').removeClass('default').addClass('primary');
     } else {
       $('#export-to-template').fadeOut();
-      // $('#export-to-template').attr('disabled','disabled').removeClass('primary').addClass('default');
     }
+  });
+
+  $('.filter input, .filter select').change(function() {
+    waitforit_view_results('preview',true);
+
+    var selectCount = 0;
+    var inputCount = 0;
+    
+    requiredSelects = $(this).parents('.filter').find('select.report-required');
+    requiredInputs = $(this).parents('.filter').find('input.report-required');
+
+    for (i = 0; i < requiredSelects.length; i++) {
+      if (requiredSelects[i].value == "") {
+        selectCount++;
+      }
+    }
+
+    for (i = 0; i < requiredInputs.length; i++) {
+      if (requiredInputs[i].value == "") {
+        inputCount++;
+      }
+    }
+
+    console.log($(this).parents('.filter').attr("data-name") + ": " + inputCount + " inputs, " + selectCount + " selects");
+
+    if (selectCount + inputCount == 0) {
+      view_results('preview');
+    } else {
+      waitforit_view_results('preview');
+    }
+    //console.log("fields in " + $(this).attr("id"));
   });
 });
 

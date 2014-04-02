@@ -17,22 +17,28 @@
             {{ field }}
           {% elif field|widget_type == 'select' %}
             <div class="picker">
-              {{ field }}
+              {% with WIDGET_REQUIRED_CLASS='report-required' %}
+              {% render_field field %}
+              {% endwith %}
             </div>
           {% elif field|widget_type == 'selectmultiple' %}
             <div class="picker-multiple">
-              {{ field }}
+              {% with WIDGET_REQUIRED_CLASS='report-required' %}
+              {% render_field field %}
+              {% endwith %}
             </div>
           {% elif field|widget_type == 'checkboxinput' %}
             <div class="dsr-checkbox">
-              {{ field }}
+              {% with WIDGET_REQUIRED_CLASS='report-required' %}
+              {% render_field field %}
+              {% endwith %}
             </div>
           {% else %}
-                {{ field.errors }}
-                {# field.label_tag #}
-
-                {% render_field field class+="input xnarrow" %}
-
+              {{ field.errors }}
+              {# field.label_tag #}
+              {% with WIDGET_REQUIRED_CLASS='report-required' %}
+              {% render_field field class+="input xnarrow" %}
+              {% endwith %}
           {% endif %}
         {% endfor %}
 
