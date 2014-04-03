@@ -4,7 +4,7 @@
   <h2>{{ report.get_name|title }}</h2>
   
   <div class="row">
-    <div class="twelve columns">
+    <div class="nine columns">
       <h3 class="filter-subheads">Filters</h3>
       <div id="scaffold">
         <div id="scaffold_filters">
@@ -53,36 +53,40 @@
         </div>
       </div>
       
+
+          <div class="generate-warning">Some filters have issues that will prevent them from being applied. You can still generate a report, but it will be made without that filter.</div>
+          <div style="clear: both;"></div>
+          {% block buttons %}
+              <div class="medium primary btn">
+                <button href="javascript:void(0);" onclick="view_results('preview');">Update Preview</button>
+              </div>
+              <div class="medium primary btn">
+                <button href="javascript:void(0);" onclick="view_results('django_admin');">Edit in Admin</button>
+              </div>
+              <div class="medium primary btn">
+                <button href="javascript:void(0);" onclick="view_results('xlsx');">Download XSLX File</button>
+              </div>
+              <div id="export-to-template" class="medium primary btn">
+                <button onclick="view_results('appy');" disabled>Export to Selected Template</button>
+              </div>
+          {% endblock %}
+
+        {% for report_button in report.report_buttons %}
+          <div class="medium btn secondary">
+            <button type="submit" onclick="view_results('{{ report_button.name }}')" name="{{ report_button.name }}">{{ report_button.get_name }}</button>
+          </div>
+        {% endfor %}
+
+
+          <div id="preview_area">
+          </div>
+
+
     </div>
-  </div>
+    <div class="three columns premade">
+      {% block premade %}
       
-  <div class="row">
-    <div class="generate-warning">Some filters have issues that will prevent them from being applied. You can still generate a report, but it will be made without that filter.</div>
-    <div style="clear:both"/>
-    {% block buttons %}
-        <div class="medium primary btn">
-          <button href="javascript:void(0);" onclick="view_results('preview');">Update Preview</button>
-        </div>
-        <div class="medium primary btn">
-          <button href="javascript:void(0);" onclick="view_results('django_admin');">Edit in Admin</button>
-        </div>
-        <div class="medium primary btn">
-          <button href="javascript:void(0);" onclick="view_results('xlsx');">Download XSLX File</button>
-        </div>
-        <div id="export-to-template" class="medium primary btn">
-          <button onclick="view_results('appy');" disabled>Export to Selected Template</button>
-        </div>
-    {% endblock %}
-  </div>
-  <div class="row">
-    {% for report_button in report.report_buttons %}
-      <div class="medium btn secondary">
-        <button type="submit" onclick="view_results('{{ report_button.name }}')" name="{{ report_button.name }}">{{ report_button.get_name }}</button>
-      </div>
-    {% endfor %}
-  </div>
-  <div class="row">
-    <div id="preview_area">
+      {% endblock %}
     </div>
   </div>
 
