@@ -3,9 +3,9 @@ import copy
 
 class ScaffoldReport(object):
     """ Base class for any actual scaffold reports
-    A scaffold report is named after UI effects for moving 
+    A scaffold report is named after UI effects for moving
     various filters and previews into the report
-    building screen. All reports require customized 
+    building screen. All reports require customized
     options set by the programmer.
     """
     #: Unique name of report.
@@ -66,7 +66,7 @@ class ScaffoldReport(object):
         if self.name_verbose != None:
             return self.name_verbose
         return self.name.replace('_', ' ')
-    
+
     def handle_post_data(self, data):
         for filter_data in data:
             for possible_filter in self._possible_filters:
@@ -88,7 +88,7 @@ class ScaffoldReport(object):
         report_context = {}
         queryset = self.model.objects.all()
         for active_filter in self._active_filters:
-            queryset = active_filter.process_filter(queryset, report_context)
+            queryset = active_filter.process_filter(queryset, self.report_context)
             if active_filter.form.errors:
                 pass
             else:
@@ -130,20 +130,20 @@ class ScaffoldReport(object):
                 if callable(cell):
                     cell = cell()
                 result_row += [cell]
-                
+
             result_list += [result_row]
         return result_list
-    
+
     def get_field_verbose(self, field):
         if isinstance(field, tuple) and len(field) == 2:
             field = field[1]
         return field
-    
+
     def get_field_name(self, field):
         if isinstance(field, tuple) and len(field) == 2:
             field = field[0]
         return field
-        
+
 
     def get_preview_fields(self):
         if self.preview_fields:
@@ -158,7 +158,7 @@ class ScaffoldReport(object):
             return preview_fields
         else:
             return [self.model._meta.verbose_name_plural.title()]
-        
+
 
 class ReportButton(object):
     """ An alternative way to submit a report.
@@ -171,7 +171,7 @@ class ReportButton(object):
     value = ""
     #: When true the queryset is processed first (so filters will run) and passed to get_report
     accepts_queryset = True
-    
+
     @property
     def get_name(self):
         """ Return name_verbose if it has been set; otherwise
@@ -179,7 +179,7 @@ class ReportButton(object):
         if self.name_verbose != None:
             return self.name_verbose
         return self.name.replace('_', ' ')
-    
+
     def get_report(self, context=None):
         """ This function will call to generate the actual report
         Should return a valid response """
@@ -213,7 +213,7 @@ def autodiscover():
 
 class ScaffoldReportClassManager(object):
     """
-    Class to handle registered reports class. 
+    Class to handle registered reports class.
     Borrowed from django-model-report Thanks!
     """
     _register = OrderedDict()
