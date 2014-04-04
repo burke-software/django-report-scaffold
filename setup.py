@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "django-report-scaffold",
-    version = "1.0",
+    version = "0.1",
     author = "David Burke",
     author_email = "david@burkesoftware.com",
     description = ("Create streamlined and flexible reporting tools for your end uesrs. Report scaffold is not a drop in application but a framework for creating reporting tools. Think of it like django admin."),
