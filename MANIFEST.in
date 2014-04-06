@@ -1,2 +1,2 @@
-recursive-include scaffold/report/templates *
-recursive-include scaffold/report/static *
+recursive-include scaffold_report/templates *
+recursive-include scaffold_report/static *
