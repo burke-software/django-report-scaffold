@@ -4,11 +4,10 @@
   <h2>{{ report.get_name|title }}</h2>
   
   <div class="row">
-    <div class="nine columns">
-      <h3 class="filter-subheads">Filters</h3>
+    <div class="twelve columns">
       <div id="scaffold">
         <div id="scaffold_filters">
-          <div id="scaffold_active_filters">
+          <div id="scaffold_inert_filters">
             {% for filter in filters %}
               {% if filter.default %}
                 {% if not filter.can_remove %}
@@ -16,6 +15,16 @@
                 {% endif %}
               {% endif %}
             {% endfor %}
+        </div>
+
+<section class="tabs">
+          <ul class="tab-nav">
+            <li class="active"><a href="#">Filters</a></li>
+            <li><a href="#">Premade Reports</a></li>
+          </ul>
+
+        <div class="tab-content active">
+          <div id="scaffold_active_filters">
             {% for filter in filters %}
               {% if filter.default %}
                 {% if filter.can_remove %}
@@ -24,7 +33,6 @@
               {% endif %}
             {% endfor %}
           </div>
-        </div>
         
         <div class="row" id="add-new-rule-block">
           <div class="three columns">
@@ -43,7 +51,15 @@
             </div>
           </div>
         </div>
-    
+        </div>
+
+        <div class="tab-content">
+        {% block premade %}
+
+        {% endblock %}
+        </div>
+</section>
+
         <div id="filter_copy_area" style="display:none;">
           {% for filter in filters %}
             {% if filter.can_add %}
@@ -67,7 +83,7 @@
                 <button href="javascript:void(0);" onclick="view_results('xlsx');">Download XSLX File</button>
               </div>
               <div id="export-to-template" class="medium primary btn">
-                <button onclick="view_results('appy');" disabled>Export to Selected Template</button>
+                <button onclick="view_results('appy');">Export to Selected Template</button>
               </div>
           {% endblock %}
 
@@ -82,11 +98,6 @@
           </div>
 
 
-    </div>
-    <div class="three columns premade">
-      {% block premade %}
-      
-      {% endblock %}
     </div>
   </div>
 
