@@ -60,13 +60,13 @@ function getCookie(name) {
 function process_errors(filter_errors) {
   /* Process ajax error infomation
    * arr is an array generated in a django template */
-  $('#scaffold_active_filters .filter').removeClass('filter_error');
+  $('.scaffold_active_filters .filter').removeClass('filter_error');
   filter_errors.forEach(function(filter_error, i) {
       if (filter_error.filter != "") {
         $('.generate-warning').show();
       }
       
-      var filterDiv = $('#scaffold_active_filters div#filter_'+filter_error.filter);
+      var filterDiv = $('.scaffold_active_filters div#filter_'+filter_error.filter);
       filterDiv.addClass('filter_error');
 
       var badFields = []; // Create array to get bad field names
@@ -100,7 +100,7 @@ function process_errors(filter_errors) {
 
 function view_results(type) {
   var csrf_token = getCookie('csrftoken');
-  var filters = $('#scaffold_active_filters .filter');
+  var filters = $('.scaffold_active_filters .filter');
   var filter_data = [];
   $('.error-text').text('');
   $('#scaffold').find('.bad-field').removeClass('bad-field');
@@ -150,7 +150,7 @@ function waitforit_view_results(type, stop) {
 
 function reindex_filters() {
     var i = 0;
-    $('#scaffold_active_filters .filter').each(function(index, value) { 
+    $('.scaffold_active_filters .filter').each(function(index, value) { 
         $(value).attr('id', 'filter_' + i);
         $(value).find('form input[name="filter_number"]').val(i);
         i += 1;
@@ -167,7 +167,7 @@ function prepare_filter(select) {
     var value = select.options[select.selectedIndex].value; // Outputs something like "TardyFilter"
     var form = $('#filter_copy_area .' + value).clone(true); // Set clone to true to duplicate event handler data as well (i.e. .click() action for delete-filter)
 
-    $('#scaffold_active_filters').append(form);
+    $('.scaffold_active_filters').append(form);
     $('#add_new_filter').val('');
 }
 
