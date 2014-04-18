@@ -167,7 +167,7 @@ function prepare_filter(select) {
     var value = select.options[select.selectedIndex].value; // Outputs something like "TardyFilter"
     var form = $('#filter_copy_area .' + value).clone(true); // Set clone to true to duplicate event handler data as well (i.e. .click() action for delete-filter)
 
-    $('.scaffold_active_filters').append(form);
+    $('#scaffold_active_filters').append(form);
     $('#add_new_filter').val('');
 }
 
