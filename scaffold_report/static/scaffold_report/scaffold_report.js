@@ -89,6 +89,7 @@ function process_errors(filter_errors) {
         if (badFields.length > 1) {
           numberError = i+1 + ". ";
           currentBadField.prev('.error-number').show().text(i+1);
+          currentBadField.parent().prev('.error-number').show().text(i+1);
         }
 
         currentBadField.addClass('bad-field'); // Tag bad field with class
