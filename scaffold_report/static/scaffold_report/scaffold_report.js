@@ -60,7 +60,10 @@ function getCookie(name) {
 function process_errors(filter_errors) {
   /* Process ajax error infomation
    * arr is an array generated in a django template */
+  console.log('process_errors() triggered');
   $('#scaffold_active_filters .filter').removeClass('filter_error');
+  $('.error-number').hide();
+
   filter_errors.forEach(function(filter_error, i) {
       if (filter_error.filter != "") {
         $('.generate-warning').show();
@@ -79,17 +82,16 @@ function process_errors(filter_errors) {
       
       errorText = ""; // Define error text
 
-      if (badFields.length > 1) { // Handle multiple errors
-        errorText = "Notes on highlighted fields, L to R:";
-      }
-
       for (i = 0; i < badFields.length; i++) {
+        currentBadField = filterDiv.find('#id_'+badFields[i]);
+
         var numberError = ""; // Handle multiple errors
         if (badFields.length > 1) {
           numberError = i+1 + ". ";
+          currentBadField.prev('.error-number').show().text(i+1);
         }
 
-        filterDiv.find('#id_'+badFields[i]).addClass('bad-field'); // Tag bad field with class
+        currentBadField.addClass('bad-field'); // Tag bad field with class
         errorText += " " + numberError + filter_error.errors[badFields[i]][0]; // Prep error text
       }
 
@@ -119,6 +121,8 @@ function view_results(type) {
   }
   
   if (type == 'preview') {
+  console.log('Here comes data_dict');
+  console.log(data_dict);
     $.post(
       'view/?type=' + type,
       data_dict,
@@ -133,15 +137,23 @@ function view_results(type) {
   }
 }
 
+$( document ).ajaxError(function( event, request, settings, exception ) {
+console.log("AJAX Error:\n");
+console.log(event);
+console.log(request);
+console.log(settings);
+console.log(exception);
+console.log("\n\n");
+});
 
 var delayValidation;
 
 function waitforit_view_results(type, stop) {
   if (stop == true) {
-    console.log("cancel timeout");
+    //console.log("cancel timeout");
     clearTimeout(delayValidation);
   } else {
-    console.log("timeout triggered");
+    //console.log("timeout triggered");
     delayValidation = window.setTimeout(function () {
       view_results(type);
     }, 5000);  
@@ -211,7 +223,7 @@ $(document).ready(function() {
       }
     }
 
-    console.log($(this).parents('.filter').attr("data-name") + ": " + inputCount + " inputs, " + selectCount + " selects");
+    //console.log($(this).parents('.filter').attr("data-name") + ": " + inputCount + " inputs, " + selectCount + " selects");
 
     if (selectCount + inputCount == 0) {
       view_results('preview');

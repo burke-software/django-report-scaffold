@@ -12,6 +12,18 @@
 	border: 1px solid #333300!important;
 }
 
+.error-number {
+	display: none;
+	z-index: 9999;
+	background-color: #eeee00;
+	padding: 3px 9px;
+	font-size: 0.8em;
+	border-radius: 500px;
+	margin: 4px -12px 0 0;
+	vertical-align: top;
+	position: relative;
+}
+
 .error-text {
 	line-height: 1.25em;
 	margin-top: 5px;

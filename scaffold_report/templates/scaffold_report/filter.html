@@ -13,6 +13,7 @@
 
       <div class="field">
         {% for field in filter.form %}
+          <span class="error-number"></span>
           {% if field.is_hidden %}
             {{ field }}
           {% elif field|widget_type == 'select' %}
