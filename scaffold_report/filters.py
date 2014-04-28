@@ -3,7 +3,7 @@
    :platform: Unix, Windows
    :synopsis: A useful module indeed.
 
-.. moduleauthor:: 
+.. moduleauthor::
 """
 
 from django import forms
@@ -25,7 +25,7 @@ class Filter(object):
     #: If set the filter will render using this django template
     #: If not set the filter will render using scaffold_report/filter.html
     template_name = None
-    #: Define fields here that will be appended together to make a generic form 
+    #: Define fields here that will be appended together to make a generic form
     fields = None
     #: Optional form class to use.
     form_class = None
@@ -41,7 +41,7 @@ class Filter(object):
     can_remove = True
     #: User is able to add this filter
     can_add = True
-    
+
     def __init__(self, **kwargs):
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
@@ -53,7 +53,7 @@ class Filter(object):
         Must return the queryset.
         """
         return queryset
-    
+
     def render_form(self):
         """ Render the form using a template
         Only called if template_name is defined """
@@ -63,7 +63,7 @@ class Filter(object):
     def get_add_fields(self):
         """ Returns the fields to add to previews and spreadsheet reports """
         return self.add_fields
-    
+
     def process_filter(self, queryset, report_context=None):
         """ Run the actual filter based on client data """
         is_valid = self.get_form_data()
@@ -71,7 +71,7 @@ class Filter(object):
             return self.queryset_filter(queryset, report_context=report_context)
         else:
             return queryset
-    
+
     def get_template_context(self):
         """ Get the context to be shown when rendering a template just
         for this filter """
@@ -79,7 +79,7 @@ class Filter(object):
         if self.form:
             context['form'] = self.form
         return context
-    
+
     def get_report_context(self, report_context):
         """ Process any data that needs set for an entire report """
         return report_context
@@ -126,7 +126,7 @@ class Filter(object):
 class DecimalCompareFilter(Filter):
     """ X greater, less, etc than decimal field """
     fields = [
-        SimpleCompareField, 
+        SimpleCompareField,
         forms.DecimalField(decimal_places=2, max_digits=6, min_value=0,),
     ]
     compare_field_string = None
@@ -153,13 +153,13 @@ class ModelChoiceFilter(Filter):
         if self.queryset:
             return self.queryset
         return self.model.objects.all()
-    
+
     def build_form(self):
         queryset = self.get_queryset()
         self.form = forms.Form()
         self.form.fields['filter_number'] = forms.IntegerField(widget=forms.HiddenInput())
         self.form.fields['field_0'] = forms.ModelChoiceField(queryset, label='')
-    
+
     def queryset_filter(self, queryset, report_context=None, **kwargs):
         selected = self.cleaned_data['field_0']
         compare_kwarg = {self.compare_field_string: selected}
@@ -182,11 +182,10 @@ class ModelMultipleChoiceFilter(ModelChoiceFilter):
         return queryset.filter(**compare_kwarg)
 
 
-
 class IntCompareFilter(DecimalCompareFilter):
     """ x greater, less, etc than int field """
     fields = [
-        SimpleCompareField, 
+        SimpleCompareField,
         forms.IntegerField(),
     ]
 

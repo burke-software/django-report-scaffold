@@ -69,7 +69,7 @@ function process_errors(filter_errors) {
         $('.generate-warning').show();
       }
       
-      var filterDiv = $('#scaffold_active_filters div#filter_'+filter_error.filter);
+      var filterDiv = $('.scaffold_active_filters div#filter_'+filter_error.filter);
       filterDiv.addClass('filter_error');
 
       var badFields = []; // Create array to get bad field names
@@ -102,7 +102,7 @@ function process_errors(filter_errors) {
 
 function view_results(type) {
   var csrf_token = getCookie('csrftoken');
-  var filters = $('#scaffold_active_filters .filter');
+  var filters = $('.scaffold_active_filters .filter');
   var filter_data = [];
   $('.error-text').text('');
   $('#scaffold').find('.bad-field').removeClass('bad-field');
@@ -162,7 +162,7 @@ function waitforit_view_results(type, stop) {
 
 function reindex_filters() {
     var i = 0;
-    $('#scaffold_active_filters .filter').each(function(index, value) { 
+    $('.scaffold_active_filters .filter').each(function(index, value) { 
         $(value).attr('id', 'filter_' + i);
         $(value).find('form input[name="filter_number"]').val(i);
         i += 1;
