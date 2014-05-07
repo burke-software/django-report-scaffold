@@ -30,7 +30,7 @@ class ScaffoldReportMixin(object):
         context['report'] = self.report
         context['filters'] = self.report.filters
         return context
-        
+
 
 class ScaffoldReportView(ScaffoldReportMixin, TemplateView):
     """ Base class for reporting """
@@ -40,17 +40,21 @@ class ScaffoldReportView(ScaffoldReportMixin, TemplateView):
 class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
     """ Show the report in various ways """
     template_name = "scaffold_report/table.html"
-    
+
     def post(self, request, **kwargs):
         download_type = request.GET.get('type')
         context = self.get_context_data(**kwargs)
         if request.POST.get('data', None):
             data = simplejson.loads(request.POST['data'])
             self.report.handle_post_data(data)
+            if download_type == "preview":
+                preview=True
+            else:
+                preview=False
             context['object_list'] = self.report.report_to_list(
-                user=self.request.user, preview=True)
+                user=self.request.user, preview=preview)
             context['headers'] = self.report.get_preview_fields()
-        
+
         for button in self.report.report_buttons:
             if button.name == download_type:
                 return button.get_report(self, context)
@@ -63,7 +67,7 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         elif download_type == "xlsx":
-            data = self.report.report_to_list(self.request.user)
+            data = self.report = context['object_list']
             return self.list_to_xlsx_response(data)
         elif download_type == 'django_admin':
             ids = self.report.get_queryset().values_list('id', flat=True)
@@ -81,7 +85,7 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
             outfile_name = tempfile.gettempdir() + '/appy' + str(time.time()) + ext
             renderer = Renderer(template_name, appy_context, outfile_name)
             renderer.run()
-            
+
             if ext == ".doc":
                 content = "application/msword"
             elif ext == ".docx":
@@ -94,7 +98,7 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
                 content = "application/vnd.oasis.opendocument.spreadsheet"
             else: # odt
                 content = "application/vnd.oasis.opendocument.text"
-            
+
             wrapper = FileWrapper(file(outfile_name))
             response = HttpResponse(wrapper, content_type=content)
             response['Content-Length'] = os.path.getsize(outfile_name)
@@ -102,4 +106,4 @@ class DownloadReportView(DataExportMixin, ScaffoldReportMixin, TemplateView):
             try: os.remove(file_name)
             except: pass # At least it's in the tmp folder
             return response
-            
+
