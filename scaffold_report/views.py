@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.edit import ProcessFormView
-from django.utils import simplejson
+import simplejson
 from report_utils.utils import DataExportMixin
 from .report import scaffold_reports
 import tempfile
