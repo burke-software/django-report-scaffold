@@ -54,7 +54,7 @@ class ScaffoldReport(object):
     def check_permissions(self, request):
         """ Return true is user has permission to view page """
         if self.permissions_required:
-            return request.user.has_perms(self.premissions_required)
+            return request.user.has_perms(self.permissions_required)
         else:
             return request.user.has_perm(
                     '{}.change_{}'.format(self.model._meta.app_label, self.model._meta.model_name))
